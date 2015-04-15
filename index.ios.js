@@ -31,12 +31,6 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000000',
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
 });
 
 AppRegistry.registerComponent('ReactNativeGoogleMaps', () => ReactNativeGoogleMaps);

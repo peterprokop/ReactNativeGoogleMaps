@@ -13,10 +13,6 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-//const CLLocationDegrees RCTMapDefaultSpan = 0.005;
-//const NSTimeInterval RCTMapRegionChangeObserveInterval = 0.1;
-//const CGFloat RCTMapZoomBoundBuffer = 0.01;
-
 @implementation RCTGoogleMapView
 {
   UIView *_legalLabel;

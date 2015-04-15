@@ -20,7 +20,7 @@ RCT_EXPORT_MODULE()
 - (UIView *)view
 {
   RCTGoogleMapView *map = [[RCTGoogleMapView alloc] init];
-  //map.delegate = self;
+
   return map;
 }
 

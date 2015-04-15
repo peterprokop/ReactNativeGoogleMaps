@@ -9,10 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <GoogleMaps/GoogleMaps.h>
 
-//extern const CLLocationDegrees RCTMapDefaultSpan;
-//extern const NSTimeInterval RCTMapRegionChangeObserveInterval;
-//extern const CGFloat RCTMapZoomBoundBuffer;
-
 @class RCTEventDispatcher;
 
 @interface RCTGoogleMapView: GMSMapView
