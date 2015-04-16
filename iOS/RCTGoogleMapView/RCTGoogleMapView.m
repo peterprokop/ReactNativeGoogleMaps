@@ -15,31 +15,24 @@
 
 @implementation RCTGoogleMapView
 {
-  UIView *_legalLabel;
-  CLLocationManager *_locationManager;
+  NSArray *_markers;
+  NSMutableArray *_markersInternal;
+}
+
++ (void)initialize
+{
+  [super initialize];
+  
+  //#error Provide your GMS API key
+  [GMSServices provideAPIKey:@""];
 }
 
 - (instancetype)init
 {
-#error Provide your GMS API key
-  [GMSServices provideAPIKey:@""];
-  
   if ((self = [super init])) {
-    // Find Apple link label
-    for (UIView *subview in self.subviews) {
-      if ([NSStringFromClass(subview.class) isEqualToString:@"MKAttributionLabel"]) {
-        // This check is super hacky, but the whole premise of moving around Apple's internal subviews is super hacky
-        _legalLabel = subview;
-        break;
-      }
-    }
+
   }
   return self;
-}
-
-- (void)dealloc
-{
-  [_regionChangeObserveTimer invalidate];
 }
 
 - (void)layoutSubviews
@@ -50,23 +43,22 @@
   CGRect mapFrame = self.frame;
   self.frame = CGRectZero;
   self.frame = mapFrame;
-  
-  if (_legalLabel) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      CGRect frame = _legalLabel.frame;
-      if (_legalLabelInsets.left) {
-        frame.origin.x = _legalLabelInsets.left;
-      } else if (_legalLabelInsets.right) {
-        frame.origin.x = mapFrame.size.width - _legalLabelInsets.right - frame.size.width;
-      }
-      if (_legalLabelInsets.top) {
-        frame.origin.y = _legalLabelInsets.top;
-      } else if (_legalLabelInsets.bottom) {
-        frame.origin.y = mapFrame.size.height - _legalLabelInsets.bottom - frame.size.height;
-      }
-      _legalLabel.frame = frame;
-    });
+}
+
+- (void)updateToFitAllMarkers
+{
+  if (!_markersInternal.count) {
+    return;
   }
+  
+  GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
+  for (GMSMarker* marker in _markersInternal) {
+    bounds = [bounds includingCoordinate:marker.position];
+  }
+
+  GMSCameraUpdate *update = [GMSCameraUpdate fitBounds:bounds withPadding:40.0];
+
+  [self animateWithCameraUpdate:update];
 }
 
 #pragma mark Accessors
@@ -88,6 +80,31 @@
     self.followUserLocation = showsUserLocation;
   }
    */
+}
+
+- (void)setMarkers:(NSArray *)markers
+{
+  if (_markers != markers) {
+    _markers = [markers copy];
+
+    for (GMSMarker* marker in _markersInternal) {
+      marker.map = nil;
+    }
+    
+    _markersInternal = [NSMutableArray arrayWithCapacity:_markers.count];
+    
+    for (NSDictionary* markerDictionary in markers) {
+      CLLocationDegrees lat = ((NSNumber*)markerDictionary[@"lat"]).doubleValue;
+      CLLocationDegrees lng = ((NSNumber*)markerDictionary[@"lng"]).doubleValue;
+      
+      GMSMarker* marker = [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(lat, lng)];
+      marker.map = self;
+      
+      [_markersInternal addObject:marker];
+    }
+    
+    [self updateToFitAllMarkers];
+  }
 }
 
 /*

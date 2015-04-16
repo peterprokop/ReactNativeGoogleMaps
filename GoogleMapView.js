@@ -120,6 +120,11 @@ var GoogleMapView = React.createClass({
      * Callback that is called once, when the user is done moving the map.
      */
     onRegionChangeComplete: React.PropTypes.func,
+
+    /**
+     * Markers array
+     */
+     markers:  React.PropTypes.array,
   },
 
   _onChange: function(event: Event) {
@@ -150,6 +155,7 @@ var GoogleMapView = React.createClass({
         onTouchMove={this.props.onTouchMove}
         onTouchEnd={this.props.onTouchEnd}
         onTouchCancel={this.props.onTouchCancel}
+        markers={this.props.markers}
       />
     );
   },
@@ -168,6 +174,7 @@ var RCTGoogleMapView = createReactIOSNativeComponentClass({
       maxDelta: true,
       minDelta: true,
       legalLabelInsets: {diff: insetsDiffer},
+      markers: true
     }
   ),
   uiViewClassName: 'RCTGoogleMapView',
