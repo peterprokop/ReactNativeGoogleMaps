@@ -13,7 +13,6 @@
 
 @interface RCTGoogleMapView: GMSMapView
 
-@property (nonatomic, assign) BOOL followUserLocation;
 @property (nonatomic, copy) NSArray *markers;
 
 @end

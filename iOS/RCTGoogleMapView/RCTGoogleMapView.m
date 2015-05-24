@@ -63,25 +63,6 @@
 
 #pragma mark Accessors
 
-- (void)setShowsUserLocation:(BOOL)showsUserLocation
-{
-  /*
-  if (self.showsUserLocation != showsUserLocation) {
-    if (showsUserLocation && !_locationManager) {
-      _locationManager = [[CLLocationManager alloc] init];
-      if ([_locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [_locationManager requestWhenInUseAuthorization];
-      }
-    }
-    [super setShowsUserLocation:showsUserLocation];
-    
-    // If it needs to show user location, force map view centered
-    // on user's current location on user location updates
-    self.followUserLocation = showsUserLocation;
-  }
-   */
-}
-
 - (void)setMarkers:(NSArray *)markers
 {
   if (_markers != markers) {
@@ -106,26 +87,5 @@
     [self updateToFitAllMarkers];
   }
 }
-
-/*
-- (void)setRegion:(MKCoordinateRegion)region
-{
-  // If location is invalid, abort
-  if (!CLLocationCoordinate2DIsValid(region.center)) {
-    return;
-  }
-  
-  // If new span values are nil, use old values instead
-  if (!region.span.latitudeDelta) {
-    region.span.latitudeDelta = self.region.span.latitudeDelta;
-  }
-  if (!region.span.longitudeDelta) {
-    region.span.longitudeDelta = self.region.span.longitudeDelta;
-  }
-  
-  // Animate to new position
-  [super setRegion:region animated:YES];
-}
-*/
 
 @end
