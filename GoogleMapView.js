@@ -1,30 +1,38 @@
 /**
- * Copyright (c) 2015-present
+ * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule GoogleMapView
+ * @providesModule MapView
  * @flow
  */
 'use strict';
 
 var EdgeInsetsPropType = require('EdgeInsetsPropType');
 var NativeMethodsMixin = require('NativeMethodsMixin');
+var Platform = require('Platform');
 var React = require('React');
-var ReactIOSViewAttributes = require('ReactIOSViewAttributes');
+var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
 var View = require('View');
 
-var createReactIOSNativeComponentClass = require('createReactIOSNativeComponentClass');
+var createReactNativeComponentClass = require('createReactNativeComponentClass');
 var deepDiffer = require('deepDiffer');
 var insetsDiffer = require('insetsDiffer');
 var merge = require('merge');
+var requireNativeComponent = require('requireNativeComponent');
 
 type Event = Object;
+type MapRegion = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+};
 
-var GoogleMapView = React.createClass({
+var MapView = React.createClass({
   mixins: [NativeMethodsMixin],
 
   propTypes: {
@@ -96,6 +104,23 @@ var GoogleMapView = React.createClass({
     }),
 
     /**
+     * Map annotations with title/subtitle.
+     */
+    annotations: React.PropTypes.arrayOf(React.PropTypes.shape({
+      /**
+       * The location of the annotation.
+       */
+      latitude: React.PropTypes.number.isRequired,
+      longitude: React.PropTypes.number.isRequired,
+
+      /**
+       * Annotation title/subtile.
+       */
+      title: React.PropTypes.string,
+      subtitle: React.PropTypes.string,
+    })),
+
+    /**
      * Maximum size of area that can be displayed.
      */
     maxDelta: React.PropTypes.number,
@@ -138,46 +163,14 @@ var GoogleMapView = React.createClass({
   },
 
   render: function() {
-    return (
-      <RCTGoogleMapView
-        style={this.props.style}
-        showsUserLocation={this.props.showsUserLocation}
-        zoomEnabled={this.props.zoomEnabled}
-        rotateEnabled={this.props.rotateEnabled}
-        pitchEnabled={this.props.pitchEnabled}
-        scrollEnabled={this.props.scrollEnabled}
-        region={this.props.region}
-        maxDelta={this.props.maxDelta}
-        minDelta={this.props.minDelta}
-        legalLabelInsets={this.props.legalLabelInsets}
-        onChange={this._onChange}
-        onTouchStart={this.props.onTouchStart}
-        onTouchMove={this.props.onTouchMove}
-        onTouchEnd={this.props.onTouchEnd}
-        onTouchCancel={this.props.onTouchCancel}
-        markers={this.props.markers}
-      />
-    );
+    return <GoogleMapView {...this.props} onChange={this._onChange} />;
   },
-
 });
 
-var RCTGoogleMapView = createReactIOSNativeComponentClass({
-  validAttributes: merge(
-    ReactIOSViewAttributes.UIView, {
-      showsUserLocation: true,
-      zoomEnabled: true,
-      rotateEnabled: true,
-      pitchEnabled: true,
-      scrollEnabled: true,
-      region: {diff: deepDiffer},
-      maxDelta: true,
-      minDelta: true,
-      legalLabelInsets: {diff: insetsDiffer},
-      markers: true
-    }
-  ),
-  uiViewClassName: 'RCTGoogleMapView',
-});
+if (Platform.OS === 'android') {
+  throw new Error("Not supposed to be used on Android");
+} else {
+  var GoogleMapView = requireNativeComponent('RCTGoogleMapView', MapView);
+}
 
-module.exports = GoogleMapView;
+module.exports = MapView;
