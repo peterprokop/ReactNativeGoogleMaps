@@ -23,7 +23,7 @@
 {
   [super initialize];
   
-  //#error Provide your GMS API key
+  #error Provide your GMS API key
   [GMSServices provideAPIKey:@""];
 }
 
