@@ -32,7 +32,7 @@ type MapRegion = {
   longitudeDelta: number;
 };
 
-var MapView = React.createClass({
+var GoogleMapView = React.createClass({
   mixins: [NativeMethodsMixin],
 
   propTypes: {
@@ -170,7 +170,7 @@ var MapView = React.createClass({
 if (Platform.OS === 'android') {
   throw new Error("Not supposed to be used on Android");
 } else {
-  var GoogleMapView = requireNativeComponent('RCTGoogleMapView', MapView);
+  var GoogleMapView = requireNativeComponent('RCTGoogleMapView', GoogleMapView);
 }
 
-module.exports = MapView;
+module.exports = GoogleMapView;
